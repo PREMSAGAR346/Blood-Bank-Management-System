@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#a71930">
+  <title>LifeLine | Blood Bank Management System</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#dashboard" aria-label="LifeLine home">
+        <span class="brand-mark">✚</span>
+        <span><strong>LifeLine</strong><small>Blood Bank Portal</small></span>
+      </a>
+      <div class="side-label">WORKSPACE</div>
+      <nav class="side-nav">
+        <a class="nav-link active" href="#dashboard" data-page="dashboard"><span>▦</span> Dashboard</a>
+        <a class="nav-link" href="#donors" data-page="donors"><span>♙</span> Donors</a>
+        <a class="nav-link" href="#inventory" data-page="inventory"><span>▤</span> Blood inventory</a>
+        <a class="nav-link" href="#requests" data-page="requests"><span>♡</span> Blood requests</a>
+      </nav>
+      <div class="sidebar-note">
+        <span class="note-icon">♥</span>
+        <strong>Every drop counts.</strong>
+        <p>A small act of kindness can save a life.</p>
+      </div>
+      <div class="sidebar-bottom">MINI PROJECT · FSD EXPERIMENT 8</div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="menu-button" id="menuButton" aria-label="Toggle menu">☰</button>
+        <div><span class="eyebrow">BLOOD BANK MANAGEMENT</span><h1 id="pageTitle">Dashboard</h1></div>
+        <div class="topbar-right"><span class="status-dot"></span><span>Demo workspace</span><span class="avatar">BB</span></div>
+      </header>
+
+      <div class="page-wrap">
+        <section class="page active" id="page-dashboard">
+          <div class="welcome-banner">
+            <div><span class="banner-kicker">WELCOME TO LIFELINE</span><h2>Manage donations.<br>Make a difference.</h2><p>Keep donor records, monitor blood stock and organize requests in one place.</p></div>
+            <div class="blood-art" aria-hidden="true">🩸</div>
+          </div>
+          <div class="section-heading"><div><span class="eyebrow">OVERVIEW</span><h2>At a glance</h2></div><button class="button button-light" id="refreshDashboard">↻ Refresh</button></div>
+          <div class="stats-grid">
+            <article class="stat-card"><div class="stat-icon red">♙</div><span>Total donors</span><strong id="statDonors">0</strong><small>Registered donor records</small></article>
+            <article class="stat-card"><div class="stat-icon pink">▤</div><span>Blood units available</span><strong id="statUnits">0</strong><small>Across all blood groups</small></article>
+            <article class="stat-card"><div class="stat-icon amber">♡</div><span>Total requests</span><strong id="statRequests">0</strong><small>Submitted blood requests</small></article>
+            <article class="stat-card"><div class="stat-icon green">✓</div><span>Pending requests</span><strong id="statPending">0</strong><small>Waiting for review</small></article>
+          </div>
+          <div class="dashboard-grid">
+            <section class="panel"><div class="panel-heading"><div><span class="eyebrow">INVENTORY</span><h3>Blood stock summary</h3></div><a href="#inventory" class="text-link">Manage stock →</a></div><div id="dashboardStock" class="stock-summary"></div></section>
+            <section class="panel"><div class="panel-heading"><div><span class="eyebrow">LATEST ACTIVITY</span><h3>Recent requests</h3></div><a href="#requests" class="text-link">View all →</a></div><div id="recentRequests" class="recent-list"></div></section>
+          </div>
+          <p class="demo-warning">Demo project only: records are stored in this browser. This application is not connected to a real blood bank and must not be used to make medical or transfusion decisions.</p>
+        </section>
+
+        <section class="page" id="page-donors">
+          <div class="section-heading"><div><span class="eyebrow">DONOR DIRECTORY</span><h2>Donor management</h2><p class="muted">Register and maintain donor contact details.</p></div><button class="button button-primary" id="showDonorForm">＋ Add donor</button></div>
+          <section class="panel form-panel hidden" id="donorFormPanel">
+            <div class="panel-heading"><div><span class="eyebrow">NEW RECORD</span><h3>Register a donor</h3></div><button class="icon-button" id="closeDonorForm" aria-label="Close">✕</button></div>
+            <form id="donorForm" class="form-grid">
+              <label>Full name<input id="donorName" type="text" maxlength="60" placeholder="Enter donor name" required></label>
+              <label>Age<input id="donorAge" type="number" min="18" max="65" placeholder="18–65" required></label>
+              <label>Blood group<select id="donorBloodGroup" required><option value="">Choose blood group</option></select></label>
+              <label>Phone number<input id="donorPhone" type="tel" inputmode="numeric" pattern="[0-9]{10}" maxlength="10" placeholder="10-digit mobile number" required></label>
+              <label class="full-field">City / Location<input id="donorCity" type="text" maxlength="80" placeholder="Enter city or area" required></label>
+              <div class="form-actions full-field"><button type="button" class="button button-light" id="cancelDonor">Cancel</button><button class="button button-primary" type="submit">Save donor</button></div>
+            </form>
+          </section>
+          <section class="panel">
+            <div class="toolbar"><div><h3>Registered donors</h3><span class="muted" id="donorCount">0 records</span></div><input class="search-input" id="donorSearch" type="search" placeholder="Search name, phone or city…"></div>
+            <div class="table-wrap"><table><thead><tr><th>Donor</th><th>Blood group</th><th>Age</th><th>Phone</th><th>Location</th><th>Action</th></tr></thead><tbody id="donorTable"></tbody></table></div>
+            <div class="empty-state hidden" id="donorEmpty">No donors found. Add your first donor record.</div>
+          </section>
+        </section>
+
+        <section class="page" id="page-inventory">
+          <div class="section-heading"><div><span class="eyebrow">STOCK CONTROL</span><h2>Blood inventory</h2><p class="muted">View and update demo stock quantities by blood group.</p></div></div>
+          <div class="inventory-grid" id="inventoryCards"></div>
+          <section class="panel stock-editor">
+            <div class="panel-heading"><div><span class="eyebrow">STOCK UPDATE</span><h3>Update blood units</h3></div></div>
+            <form id="stockForm" class="stock-form">
+              <label>Blood group<select id="stockGroup" required></select></label>
+              <label>Change in units<input id="stockChange" type="number" min="1" max="500" step="1" placeholder="Example: 5" required></label>
+              <label>Action<select id="stockAction"><option value="add">Add units</option><option value="remove">Remove units</option></select></label>
+              <button class="button button-primary" type="submit">Update stock</button>
+            </form>
+            <p class="field-note">Use this feature only to demonstrate inventory tracking. Stock entries are sample data, not verified blood products.</p>
+          </section>
+        </section>
+
+        <section class="page" id="page-requests">
+          <div class="section-heading"><div><span class="eyebrow">REQUEST CENTER</span><h2>Blood requests</h2><p class="muted">Record and track demo requests for blood units.</p></div><button class="button button-primary" id="showRequestForm">＋ New request</button></div>
+          <section class="panel form-panel hidden" id="requestFormPanel">
+            <div class="panel-heading"><div><span class="eyebrow">NEW REQUEST</span><h3>Submit a blood request</h3></div><button class="icon-button" id="closeRequestForm" aria-label="Close">✕</button></div>
+            <form id="requestForm" class="form-grid">
+              <label>Patient name<input id="patientName" type="text" maxlength="60" placeholder="Enter patient name" required></label>
+              <label>Blood group<select id="requestBloodGroup" required><option value="">Choose blood group</option></select></label>
+              <label>Units required<input id="requestUnits" type="number" min="1" max="20" placeholder="Number of units" required></label>
+              <label>Contact number<input id="requestPhone" type="tel" inputmode="numeric" pattern="[0-9]{10}" maxlength="10" placeholder="10-digit mobile number" required></label>
+              <label class="full-field">Hospital / Location<input id="requestHospital" type="text" maxlength="100" placeholder="Enter hospital or location" required></label>
+              <div class="form-actions full-field"><button type="button" class="button button-light" id="cancelRequest">Cancel</button><button class="button button-primary" type="submit">Submit request</button></div>
+            </form>
+          </section>
+          <section class="panel">
+            <div class="toolbar"><div><h3>Request records</h3><span class="muted" id="requestCount">0 records</span></div><select class="filter-select" id="requestFilter"><option value="all">All requests</option><option value="Pending">Pending</option><option value="Approved">Approved</option><option value="Rejected">Rejected</option></select></div>
+            <div class="table-wrap"><table><thead><tr><th>Patient</th><th>Blood group</th><th>Units</th><th>Hospital / Location</th><th>Date</th><th>Status</th><th>Action</th></tr></thead><tbody id="requestTable"></tbody></table></div>
+            <div class="empty-state hidden" id="requestEmpty">No requests found. Submit a new request to get started.</div>
+          </section>
+        </section>
+      </div>
+      <footer class="footer">LifeLine Blood Bank Portal <span>Built for FSD Mini Project · HTML, CSS & JavaScript</span></footer>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="script.js"></script>
+</body>
+</html>
